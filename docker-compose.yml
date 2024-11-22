@@ -1,51 +1,44 @@
+name: "laravel"
 services:
-    news_app:
-        container_name: news_app
-        build:
-            context: .
-            dockerfile: ./docker/php/Dockerfile
-        expose:
-            - 9000
-        volumes:
-            - .:/usr/src/app
-            - ./public:/usr/src/app/public
-        depends_on:
-            - news_db
-        networks:
-            - app_network
-
-    news_nginx:
-        container_name: news_nginx
-        build:
-            context: .
-            dockerfile: ./docker/nginx/Dockerfile
-        volumes:
-            - ./public:/usr/src/app/public
-        ports:
-            - 8000:80
-        depends_on:
-            - news_app
-        environment:
-            NGINX_FPM_HOST: news_app
-            NGINX_ROOT: /usr/src/app/public
-        networks:
-            - app_network
-
-    news_db:
-        container_name: news_db
-        image: mysql:latest
-        restart: always
-        volumes:
-            - ./storage/db-data:/var/lib/mysql
-        ports:
-            - 3306:3306
-        environment:
-            MYSQL_DATABASE: laraveltest
-            MYSQL_ROOT_PASSWORD: password
-            MYSQL_PASSWORD: password
-        networks:
-            - app_network
-
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - internal
+    volumes:
+      - .:/var/www/html/
+      - ./logs/nginx:/var/log/nginx/
+    container_name: nginx
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    networks:
+      - internal
+    volumes:
+      - .:/var/www/html/
+      - ./logs/php.log:/var/log/fpm-php.www.log
+    container_name: php
+    expose:
+      - "9000"
+  mysql:
+    container_name: db
+    restart: always
+    image: mysql:latest
+    platform: linux/x86_64
+    ports:
+     - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_USER: 'laravel'
+      MYSQL_PASS: 'password'
+    volumes:
+      - ./db-data:/var/lib/mysql
+    networks:
+      - internal
 networks:
-    app_network:
-        driver: bridge
+  internal:
+    driver: bridge
