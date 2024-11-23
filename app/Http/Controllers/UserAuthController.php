@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegistrationRequest;
+use App\Http\Resources\UserLoginResource;
 use App\Http\Resources\UserRegistrationResource;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use function App\Helpers\failedResponse;
@@ -23,4 +26,20 @@ class UserAuthController extends Controller
             return failedResponse(__('message.user.register.failed'));
         }
     }
+
+    public function login(UserLoginRequest $request): JsonResponse
+    {
+        try {
+            $credentials = $request->safe()->only(['email', 'password']);
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
+                $user->token = $user->createToken($user->name.'-AuthToken')->plainTextToken;
+                return successResponse(__('message.user.login.success'), new UserLoginResource($user));
+            }
+            return failedResponse(__('auth.failed'), [], Response::HTTP_UNAUTHORIZED);
+        } catch (Exception $exception) {
+            return failedResponse(__('message.user.login.failed'));
+        }
+    }
+
 }
