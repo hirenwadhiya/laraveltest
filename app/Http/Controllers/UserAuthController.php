@@ -42,4 +42,13 @@ class UserAuthController extends Controller
         }
     }
 
+    public function logout(): JsonResponse
+    {
+        try {
+            auth()->user()->tokens()->delete();
+            return successResponse(__('message.user.logout.success'));
+        } catch (Exception $exception) {
+            return failedResponse(__('message.user.logout.failed'));
+        }
+    }
 }

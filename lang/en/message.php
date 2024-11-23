@@ -9,6 +9,10 @@ return [
         'login' => [
             'success' => 'User logged in successfully',
             'failed' => 'User unable to login',
+        ],
+        'logout' => [
+            'success' => 'User logged out successfully',
+            'failed' => 'User unable to logout',
         ]
     ]
 ];
