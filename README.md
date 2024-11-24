@@ -15,7 +15,9 @@ News App fetch and stores articles from third party APIs and perform search oper
 - Signup on NewsAPI, The Guardian and New York Times and create API key and paste it in env file
 - Run docker up command: `docker compose up`
 - Install packages by: `docker exec -it php composer install`
-- Set of commands: `docker exec -it php php composer setup`
+- Set of commands: `docker exec -it php composer setup`
+- To fetch and store the articles: `docker exec -it php php artisan store:articles`
+- Make sure queue is running: `docker exec -it php php artisan queue:listen`
 Once it is successful, application is available at http://127.0.0.1:8080/
 
 ## API Endpoints
