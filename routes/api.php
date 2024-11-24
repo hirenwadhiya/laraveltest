@@ -22,7 +22,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('register', [UserAuthController::class, 'register']);
 Route::post('login', [UserAuthController::class, 'login']);
-Route::post('logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::get('articles', [ArticleController::class, 'index'])->middleware('auth:sanctum');
-Route::get('articles/{id}', [ArticleController::class, 'show'])->middleware('auth:sanctum');
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::post('logout', [UserAuthController::class, 'logout'])->name('logout');
+    Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
+    Route::get('articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
+});
