@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class SaveNYTimesApiArticlesJob implements ShouldQueue
 {
@@ -38,13 +39,13 @@ class SaveNYTimesApiArticlesJob implements ShouldQueue
             ]);
 
             $source->articles()->create([
-                'title' => $article['headline']['main'],
-                'slug'  => $article['headline']['main'],
+                'title' => Str::limit($article['headline']['main'], 255),
+                'slug'  => Str::limit($article['headline']['main'], 255),
                 'author'    => $article['byline']['original'],
                 'description'   => $article['lead_paragraph'],
                 'content'   => $article['abstract'],
                 'url'   => $article['web_url'],
-                'image_url'   => $article['multimedia'][0]['url'],
+                'image_url'   => $article['multimedia'][0]['url'] ?? null,
                 'published_at'   => $article['pub_date'],
                 'source_id' => $source->id,
                 'category_id'   => $category->id,

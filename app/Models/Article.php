@@ -36,7 +36,7 @@ class Article extends Model
     {
         return Attribute::make(
             get: fn (string $value) => ucfirst($value),
-            set: fn (string $value) => trim($value),
+            set: fn (string $value) => Str::limit(trim($value), 255),
         );
     }
 
@@ -44,7 +44,7 @@ class Article extends Model
     {
         return Attribute::make(
             get: fn (string $value) => strtolower($value),
-            set: fn (string $value) => Str::slug($this->title),
+            set: fn (string $value) => Str::slug(Str::limit(trim($this->title), 255),),
         );
     }
 
