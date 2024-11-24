@@ -14,5 +14,11 @@ return [
             'success' => 'User logged out successfully',
             'failed' => 'User unable to logout',
         ]
-    ]
+    ],
+    'article' => [
+        'list' => [
+            'success' => 'Articles retrieved successfully',
+            'failed' => 'Article failed to retrieve',
+        ]
+    ],
 ];

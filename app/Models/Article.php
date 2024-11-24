@@ -30,6 +30,8 @@ class Article extends Model
         'published_at' => 'datetime',
     ];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     protected function title(): Attribute
     {
         return Attribute::make(
@@ -99,8 +101,8 @@ class Article extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function source(): HasOne
+    public function source(): BelongsTo
     {
-        return $this->hasOne(Source::class);
+        return $this->belongsTo(Source::class);
     }
 }
