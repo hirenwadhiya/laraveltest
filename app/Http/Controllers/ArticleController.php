@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ArticleSearchRequest;
 use App\Http\Resources\ArticleCollection;
+use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use function App\Helpers\failedResponse;
 use function App\Helpers\successResponse;
 
@@ -39,6 +40,16 @@ class ArticleController extends Controller
             return successResponse(__('message.article.list.success'), new ArticleCollection($articles));
         } catch (Exception $exception) {
             return failedResponse(__('message.article.list.failed'));
+        }
+    }
+
+    public function show($id): JsonResponse
+    {
+        try {
+            $article = Article::with(['category:id,name', 'source:id,name'])->findOrFail($id);
+            return successResponse(__('message.article.show.success'), new ArticleResource($article));
+        } catch (ModelNotFoundException $exception) {
+            return failedResponse(__('message.article.show.failed'));
         }
     }
 }

@@ -25,3 +25,4 @@ Route::post('login', [UserAuthController::class, 'login']);
 Route::post('logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('articles', [ArticleController::class, 'index'])->middleware('auth:sanctum');
+Route::get('articles/{id}', [ArticleController::class, 'show'])->middleware('auth:sanctum');

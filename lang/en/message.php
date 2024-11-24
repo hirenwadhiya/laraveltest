@@ -19,6 +19,10 @@ return [
         'list' => [
             'success' => 'Articles retrieved successfully',
             'failed' => 'Article failed to retrieve',
+        ],
+        'show' => [
+            'success' => 'Article retrieved successfully',
+            'failed' => 'Article failed to retrieve',
         ]
     ],
 ];
